@@ -1,0 +1,31 @@
+services:
+  oai-xapp-rc-slice-ctrl:
+    image: ithermai6gtc/xapp-rc-slice-ctrl:v1
+    container_name: oai-xapp-rc-slice-ctrl
+    restart: always
+    networks:
+      ric_net:
+        ipv4_address: 192.168.75.12
+    volumes:
+      - ./flexric.conf:/usr/local/etc/flexric/flexric.conf
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: /bin/bash -c "pgrep xapp_rc_slice_c"
+      retries: 5
+      timeout: 5s
+      interval: 10s
+
+networks:
+  public_net:
+      external:
+          name: demo-oai-public-net
+  ric_net:
+      external:
+          name: rfsim5g-oai-ric-net
+  ue_net:
+      external:
+          name: rfsim5g-oai-ue-net
+  public_net_access:
+      external:
+          name: oai-public-access
