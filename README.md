@@ -12,8 +12,24 @@ It is fully compatible with the **OpenAirInterface (OAI) 5G Core (5GC)** and tai
 ## 📖 Overview
 
 In multi-slice 5G networks, the performance of connected **User Equipment (UE)** devices must be continuously monitored and analyzed to ensure optimal resource utilization and service efficiency.  
-This repository introduces a **Deep Reinforcement Learning (DRL)–based xApp** that **automatically aligns and optimizes network PRB and bandwidth allocation** across different network slices.  
-The DRL xApp operates in conjunction with a **modified xApp KPM (Key Performance Measurement) monitoring module**, which collects comprehensive **KPI metrics** from all connected UEs across slices and stores them in a **MySQL database**. These stored metrics serve as the training and decision-making data foundation for the DRL xApp, enabling **intelligent, closed-loop network optimization**.
+This repository introduces a **Explainable Deep Reinforcement Learning (xDRL)– xApp** that **automatically aligns and optimizes network PRB and bandwidth allocation** across different network slices.  
+The xDRL xApp operates in conjunction with a **modified xApp KPM (Key Performance Measurement) monitoring module**, which collects comprehensive **KPI metrics** from all connected UEs across slices and stores them in a **MySQL database**. These stored metrics serve as the training and decision-making data foundation for the DRL xApp, enabling **intelligent, closed-loop network optimization**.
+
+## Overall xDRL-RCS Architecture
+<img width="732" height="745" alt="image" src="https://github.com/user-attachments/assets/bd1d3960-2cf1-461d-a4fb-c8aa5506acf0" />
+
+The overall architecture of the developed testbed, represents the integration of all functional components—**OAI RAN, FlexRIC near-RT RIC**, and **OAI 5G Core**—into a unified environment supporting closed-loop, explainable deep reinforcement-learning control.
+The design follows a layered approach, ensuring separation between the RAN, control, and core domains while maintaining synchronized data exchange through standardized interfaces.
+At the bottom layer, the **OAI gNB** hosts the physical and MAC functionalities of the Radio Access Network. It serves multiple network slices, each corresponding to a distinct service class (**eMBB, URLLC, mMTC**).
+Within the gNB, **PRB utilization, RSRP, BLER,** and **throughput** are continuously monitored and transmitted through the **E2 interface** to the FlexRIC controller.
+These metrics provide the state information required for learning-based resource management.
+The middle layer represents the FlexRIC near-real-time RIC, which orchestrates intelligent control through three modular xApps:
+•	**Enhanced KPM xApp**, responsible for telemetry extraction and KPI aggregation;
+•	**xDRL xApp**, implementing the trained reinforcement-learning model for decision inference in inter-slice PRB management; and
+•	**RC Slice Control xApp**, which applies the inferred actions by sending configuration updates to the gNB through **E2SM-RC messages**, thereby controlling inter-slice PRB allocation.
+All telemetry is logged in a central **MySQL database** accessible to the **xDRL controller**, ensuring persistent state tracking and synchronized data sampling.
+A REST API interface enables interaction between the **RC xApp** and the **xDRL xApp**, supporting seamless coordination between decision inference and control execution.
+
 
 ## 📡 5G Core Network Slicing
 
